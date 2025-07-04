@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNDERGROUND CINEMA - Portal Alternativo</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* Tipografías Underground */
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a0a 100%);
+        }
+        
+        .underground-title {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .glitch-text {
+            position: relative;
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-text::before {
+            animation: glitch-1 0.5s infinite;
+            color: #ff0040;
+            z-index: -1;
+        }
+        
+        .glitch-text::after {
+            animation: glitch-2 0.5s infinite;
+            color: #00ff80;
+            z-index: -2;
+        }
+        
+        @keyframes glitch-1 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate(0); }
+            15%, 49% { transform: translate(-2px, -1px); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate(0); }
+            21%, 62% { transform: translate(2px, 1px); }
+        }
+        
+        /* Evitar scroll cuando no está logueado */
+        body.no-scroll {
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* Barra de scroll personalizada con neón underground */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #000000;
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(255, 0, 64, 0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff0040, #000000, #00ff80);
+            border-radius: 10px;
+            border: 2px solid #000000;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.8), 
+                        inset 0 0 10px rgba(0, 255, 128, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #ff0040, #333333, #00ff80);
+            box-shadow: 0 0 15px rgba(255, 0, 64, 1), 
+                        inset 0 0 15px rgba(0, 255, 128, 0.5);
+        }
+        
+        /* Para Firefox */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #ff0040 #000000;
+        }
+        
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+        
+        .movie-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .movie-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 64, 0.2), transparent);
+            transition: left 0.5s;
+            z-index: 1;
+        }
+        
+        .movie-card:hover::before {
+            left: 100%;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 0, 64, 0.3);
+        }
+        
+        /* Estilos para la descripción de la película al hacer hover */
+        .movie-poster:hover .movie-description {
+            opacity: 1;
+        }
+        
+        .search-bar {
+            transition: all 0.3s ease;
+            border: 1px solid #333;
+        }
+        
+        .search-bar.expanded {
+            width: 100%;
+            border-color: #ff0040;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
+        }
+        
+        /* Estilos para el modal de login underground */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(26, 10, 26, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+        
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1a0a1a 0%, #0a0a0a 100%);
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255, 0, 64, 0.2);
+            position: relative;
+        }
+        
+        .login-form::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0040, #00ff80, #ff0040);
+            border-radius: 8px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Efectos de texto underground */
+        .underground-text {
+            color: #cccccc;
+            text-shadow: 0 0 5px rgba(255, 0, 64, 0.3);
+        }
+        
+        .neon-border {
+            border: 1px solid #333;
+            box-shadow: 0 0 5px rgba(255, 0, 64, 0.2);
+        }
+        
+        .neon-border:focus {
+            border-color: #ff0040;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+            outline: none;
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 0, 64, 0.3);
+            border-radius: 50%;
+            border-top-color: #ff0040;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Drag and drop styles */
+        .upload-area.dragover {
+            border-color: #ff0040;
+            background-color: rgba(255, 0, 64, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-black text-white no-scroll min-h-screen">
+    <!-- Modal de Login -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-form">
+            <h2 class="text-2xl font-bold mb-6 text-center underground-title glitch-text" data-text="ACCESO RESTRINGIDO">ACCESO RESTRINGIDO</h2>
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium mb-2 underground-text">USUARIO</label>
+                <input type="text" id="username" class="w-full px-3 py-2 bg-black rounded neon-border underground-text" placeholder="Ingrese usuario">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium mb-2 underground-text">CLAVE</label>
+                <input type="password" id="password" class="w-full px-3 py-2 bg-black rounded neon-border underground-text" placeholder="Ingrese clave">
+            </div>
+            <div id="loginError" class="text-red-500 text-sm mb-4 hidden underground-text">ACCESO DENEGADO - CREDENCIALES INVÁLIDAS</div>
+            <button id="loginButton" class="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-medium py-3 px-4 rounded underground-title text-sm tracking-wider transition-all duration-300 transform hover:scale-105">
+                >>> ENTRAR AL UNDERGROUND <<<
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal para subir película -->
+    <div id="uploadMovieModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-black opacity-80"></div>
+            </div>
+            <div class="inline-block align-bottom bg-black border border-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <form id="uploadMovieForm" enctype="multipart/form-data">
+                    <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 bg-gradient-to-b from-gray-900 to-black">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                                <h3 class="text-2xl leading-6 underground-title text-white mb-4">
+                                    SUBIR PELÍCULA
+                                </h3>
+                                <div class="mt-4 space-y-4">
+                                    <div>
+                                        <label for="movie-title" class="block text-sm underground-text mb-2">TÍTULO *</label>
+                                        <input type="text" id="movie-title" name="titulo" class="w-full px-3 py-2 bg-black rounded neon-border underground-text" placeholder="Título de la película" required>
+                                    </div>
+                                    <div>
+                                        <label for="movie-description" class="block text-sm underground-text mb-2">DESCRIPCIÓN</label>
+                                        <textarea id="movie-description" name="descripcion" rows="3" class="w-full px-3 py-2 bg-black rounded neon-border underground-text" placeholder="Descripción de la película"></textarea>
+                                    </div>
+                                    <div>
+                                        <label for="movie-genre" class="block text-sm underground-text mb-2">GÉNEROS</label>
+                                        <input type="text" id="movie-genre" name="genero" class="w-full px-3 py-2 bg-black rounded neon-border underground-text" placeholder="Ejemplo: CULT • EXPERIMENTAL">
+                                    </div>
+                                    <div>
+                                        <label for="movie-year" class="block text-sm underground-text mb-2">AÑO *</label>
+                                        <input type="number" id="movie-year" name="anio" min="1900" max="2030" class="w-full px-3 py-2 bg-black rounded neon-border underground-text" placeholder="Año de estreno" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm underground-text mb-2">POSTER</label>
+                                        <div class="upload-area relative border-2 border-dashed border-gray-700 rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 transition">
+                                            <i class="fas fa-upload text-2xl text-gray-500 mb-2"></i>
+                                            <p class="text-xs text-gray-500 mb-1">Arrastra una imagen o haz clic para seleccionar</p>
+                                            <p class="text-xs text-gray-600">PNG, JPG (MAX. 2MB)</p>
+                                            <input type="file" name="poster" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+                                            <div class="poster-preview mt-2 hidden">
+                                                <img class="max-w-full h-20 object-cover rounded" alt="Vista previa">
+                                                <p class="text-xs text-green-500 mt-1">Imagen seleccionada</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm underground-text mb-2">ARCHIVO DE PELÍCULA</label>
+                                        <div class="upload-area relative border-2 border-dashed border-gray-700 rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 transition">
+                                            <i class="fas fa-film text-2xl text-gray-500 mb-2"></i>
+                                            <p class="text-xs text-gray-500 mb-1">Arrastra un archivo o haz clic para seleccionar</p>
+                                            <p class="text-xs text-gray-600">MP4, WebM (MAX. 100MB)</p>
+                                            <input type="file" name="video" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="video/*">
+                                            <div class="video-preview mt-2 hidden">
+                                                <p class="text-xs text-green-500">Video seleccionado: <span class="filename"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="uploadError" class="text-red-500 text-sm mt-4 hidden"></div>
+                                <div id="uploadSuccess" class="text-green-500 text-sm mt-4 hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-black px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-800">
+                        <button type="submit" id="submitMovieButton" class="w-full inline-flex justify-center rounded-md px-4 py-2 bg-gradient-to-r from-red-600 to-red-800 text-white underground-title text-sm hover:from-red-700 hover:to-red-900 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                            <span class="submit-text">SUBIR</span>
+                            <span class="loading hidden ml-2"></span>
+                        </button>
+                        <button type="button" id="cancelUploadButton" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-700 shadow-sm px-4 py-2 bg-black text-gray-300 underground-text text-sm hover:bg-gray-900 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            CANCELAR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para reproductor de video -->
+    <div id="videoPlayerModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-black opacity-95"></div>
+            </div>
+            <div class="inline-block align-bottom rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="px-4 pt-5 pb-4 sm:p-0">
+                    <div class="sm:flex sm:items-start">
+                        <div class="w-full">
+                            <div class="flex justify-between items-center p-4">
+                                <h3 id="videoTitle" class="text-xl underground-title text-white glitch-text" data-text="TÍTULO DE LA PELÍCULA">TÍTULO DE LA PELÍCULA</h3>
+                                <button id="closeVideoButton" class="text-gray-400 hover:text-red-500 focus:outline-none">
+                                    <i class="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+                            <div class="video-container bg-black">
+                                <video id="videoPlayer" class="w-full" controls>
+                                    <source src="" type="video/mp4">
+                                    Tu navegador no soporta el tag de video.
+                                </video>
+                            </div>
+                            <div class="p-4">
+                                <p id="videoDescription" class="underground-text text-sm">Descripción de la película.</p>
+                                <div class="mt-2 flex justify-between items-center">
+                                    <span id="videoGenre" class="underground-text text-xs opacity-75">GÉNERO • TIPO</span>
+                                    <span id="videoYear" class="text-xs underground-text opacity-50 tracking-widest">/// 2024 ///</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Navegación Underground -->
+    <nav class="bg-black py-4 px-6 shadow-2xl border-b border-gray-800" style="background: linear-gradient(90deg, #000000 0%, #1a0a1a 50%, #000000 100%);">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-2xl underground-title text-red-500 glitch-text" data-text="UNDERGROUND CINEMA">UNDERGROUND CINEMA</h1>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <button id="uploadMovieButton" class="px-4 py-2 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 rounded text-white underground-title text-sm tracking-wider transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-upload mr-2"></i> SUBIR PELÍCULA
+                </button>
+                <div class="relative search-container">
+                    <div class="search-bar flex items-center bg-black rounded-full px-3 py-1">
+                        <input type="text" id="searchInput" placeholder="Buscar en el underground..." class="bg-transparent border-none focus:outline-none w-full underground-text">
+                        <button class="search-button ml-2 text-gray-400 hover:text-red-500 transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Menú móvil con lupa -->
+            <div class="md:hidden flex items-center">
+                <button class="mobile-search-button text-gray-400 hover:text-red-500 transition">
+                    <i class="fas fa-search text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Barra de búsqueda móvil (oculta por defecto) -->
+        <div class="mobile-search-bar hidden mt-4 px-4 md:hidden">
+            <div class="relative">
+                <input type="text" id="mobileSearchInput" placeholder="Buscar en el underground..." class="w-full bg-black border border-gray-700 rounded-full px-4 py-2 focus:outline-none focus:border-red-500 underground-text">
+                <button class="absolute right-3 top-2 text-gray-400 hover:text-red-500 transition">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Banner Principal Underground -->
+        <div class="relative rounded-xl overflow-hidden mb-10 border border-gray-800">
+            <img src="https://public.youware.com/users-website-assets/prod/6eda4fd6-fc45-4388-a956-0b397ee2fc24/339fd96284ab4aebb22be7f75e9e1f5d.jpg" alt="Banner underground" class="w-full h-64 md:h-96 object-cover filter grayscale contrast-125">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-80"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-red-900 via-transparent to-red-900 opacity-20"></div>
+            <div class="absolute bottom-0 left-0 p-6">
+                <h2 class="text-3xl md:text-4xl underground-title mb-2 glitch-text" data-text="CINE UNDERGROUND">CINE UNDERGROUND</h2>
+                <p class="text-lg md:text-xl underground-text">Descubre el lado oscuro del séptimo arte</p>
+                <div class="mt-3 text-sm underground-text opacity-75 tracking-widest">/// PROHIBIDO PARA MENTES CONVENCIONALES ///</div>
+            </div>
+        </div>
+
+        <!-- Título de Sección Underground -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl underground-title">ARCHIVO CINEMATOGRÁFICO</h2>
+            <div class="flex space-x-2">
+                <button class="filter-btn px-3 py-1 bg-black hover:bg-gray-900 rounded border border-gray-700 text-sm transition underground-text hover:border-red-500" data-filter="CULT">
+                    <i class="fas fa-skull mr-1"></i> CULT
+                </button>
+                <button class="filter-btn px-3 py-1 bg-black hover:bg-gray-900 rounded border border-gray-700 text-sm transition underground-text hover:border-red-500" data-filter="UNDERGROUND">
+                    <i class="fas fa-eye mr-1"></i> UNDERGROUND
+                </button>
+                <button class="filter-btn px-3 py-1 bg-black hover:bg-gray-900 rounded border border-gray-700 text-sm transition underground-text hover:border-red-500" data-filter="">
+                    <i class="fas fa-list mr-1"></i> TODAS
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="text-center py-8 hidden">
+            <div class="loading mx-auto"></div>
+            <p class="underground-text mt-2">Cargando películas del underground...</p>
+        </div>
+
+        <!-- Grid de Películas -->
+        <div id="movieGrid" class="movie-grid">
+            <!-- Las películas se cargarán dinámicamente desde la base de datos -->
+        </div>
+
+        <!-- Mensaje cuando no hay resultados -->
+        <div id="noResults" class="text-center py-8 hidden">
+            <i class="fas fa-film text-4xl text-gray-600 mb-4"></i>
+            <p class="underground-text text-lg">No se encontraron películas en el underground</p>
+            <p class="underground-text text-sm opacity-75">Intenta con otro término de búsqueda</p>
+        </div>
+
+        <!-- Paginación Underground -->
+        <div id="pagination" class="flex justify-center mt-10 hidden">
+            <div class="flex space-x-2">
+                <button id="prevPage" class="w-12 h-12 rounded bg-black hover:bg-gray-900 border border-gray-700 hover:border-red-500 flex items-center justify-center transition underground-text">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div id="pageNumbers" class="flex space-x-2">
+                    <!-- Se generarán dinámicamente -->
+                </div>
+                <button id="nextPage" class="w-12 h-12 rounded bg-black hover:bg-gray-900 border border-gray-700 hover:border-red-500 flex items-center justify-center transition underground-text">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Underground -->
+    <footer class="bg-black border-t border-gray-800 py-8 px-6" style="background: linear-gradient(180deg, #000000 0%, #1a0a1a 100%);">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl underground-title text-red-500 mb-4 glitch-text" data-text="UNDERGROUND CINEMA">UNDERGROUND CINEMA</h3>
+                    <p class="mb-4 underground-text opacity-75">Portal del cine alternativo y experimental. Solo para cinéfilos verdaderos.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-red-500 transition underground-text"><i class="fab fa-mastodon"></i></a>
+                        <a href="#" class="hover:text-red-500 transition underground-text"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="hover:text-red-500 transition underground-text"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="hover:text-red-500 transition underground-text"><i class="fas fa-film"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg underground-title mb-4">ARCHIVO</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// INICIO</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// CULT CLASSICS</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// EXPERIMENTAL</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// NOIR COLLECTION</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// UNDERGROUND GEMS</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg underground-title mb-4">CONTACTO</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// MANIFESTO</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// CONTACT</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// SUBMISSIONS</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// PRIVACY VOID</a></li>
+                        <li><a href="#" class="hover:text-red-500 transition underground-text tracking-wide">/// TERMS UNKNOWN</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-6 text-sm text-center">
+                <p class="underground-text opacity-50 tracking-widest">/// 2025 UNDERGROUND CINEMA /// RESISTENCIA CULTURAL ///</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración de la API
+        const API_BASE = './api/';
+        let currentPage = 1;
+        let currentSearch = '';
+        let currentFilter = '';
+        
+        // Estado de la aplicación
+        let isLoggedIn = false;
+        
+        // Función para hacer peticiones a la API
+        async function apiRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(API_BASE + endpoint, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+        
+        // Función para subir archivos
+        async function uploadFile(formData) {
+            try {
+                const response = await fetch(API_BASE + 'upload_movie.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Upload Error:', error);
+                throw error;
+            }
+        }
+        
+        // Función para cargar películas
+        async function loadMovies(page = 1, search = '', filter = '') {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const movieGrid = document.getElementById('movieGrid');
+            const noResults = document.getElementById('noResults');
+            
+            loadingIndicator.classList.remove('hidden');
+            movieGrid.innerHTML = '';
+            noResults.classList.add('hidden');
+            
+            try {
+                let endpoint = 'get_movies.php?page=' + page;
+                
+                if (search) {
+                    endpoint = 'search_movies.php?q=' + encodeURIComponent(search) + '&page=' + page;
+                }
+                
+                const response = await apiRequest(endpoint);
+                
+                if (response.success && response.data.length > 0) {
+                    let movies = response.data;
+                    
+                    // Filtrar por género si es necesario
+                    if (filter) {
+                        movies = movies.filter(movie => 
+                            movie.genero && movie.genero.toUpperCase().includes(filter.toUpperCase())
+                        );
+                    }
+                    
+                    if (movies.length === 0) {
+                        showNoResults();
+                    } else {
+                        renderMovies(movies);
+                        renderPagination(response.pagination);
+                    }
+                } else {
+                    showNoResults();
+                }
+            } catch (error) {
+                console.error('Error loading movies:', error);
+                showError('Error al cargar las películas');
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+        
+        // Función para mostrar películas
+        function renderMovies(movies) {
+            const movieGrid = document.getElementById('movieGrid');
+            movieGrid.innerHTML = '';
+            
+            movies.forEach(movie => {
+                const movieCard = createMovieCard(movie);
+                movieGrid.appendChild(movieCard);
+            });
+        }
+        
+        // Función para crear tarjeta de película
+        function createMovieCard(movie) {
+            const card = document.createElement('div');
+            card.className = 'movie-card bg-black rounded-lg overflow-hidden shadow-xl border border-gray-800';
+            
+            const posterSrc = movie.poster_path || 'https://via.placeholder.com/300x450/1a1a1a/ffffff?text=NO+IMAGE';
+            const videoSrc = movie.video_path || '';
+            
+            card.innerHTML = `
+                <div class="relative cursor-pointer movie-poster" 
+                     data-title="${escapeHtml(movie.titulo)}" 
+                     data-description="${escapeHtml(movie.descripcion || 'Sin descripción disponible')}" 
+                     data-genre="${escapeHtml(movie.genero || 'UNDERGROUND')}" 
+                     data-year="${movie.anio || 2024}" 
+                     data-video="${videoSrc}">
+                    <img src="${posterSrc}" alt="${escapeHtml(movie.titulo)}" class="w-full h-80 object-cover filter sepia contrast-125">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+                    
+                    <!-- Descripción overlay (oculta por defecto) -->
+                    <div class="movie-description absolute inset-0 bg-black bg-opacity-80 p-4 opacity-0 transition-opacity duration-300 flex flex-col justify-center">
+                        <p class="underground-text text-sm mb-3">${escapeHtml(movie.descripcion || 'Sin descripción disponible')}</p>
+                        <div class="text-center">
+                            <span class="inline-block bg-red-800 bg-opacity-50 px-3 py-1 rounded-full text-xs underground-text">
+                                <i class="fas fa-play mr-1"></i> REPRODUCIR
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="underground-title text-lg mb-1 tracking-wide">${escapeHtml(movie.titulo)}</h3>
+                    <p class="underground-text text-sm mb-2 opacity-75">${escapeHtml(movie.genero || 'UNDERGROUND')}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs underground-text opacity-50 tracking-widest">/// ${movie.anio || 2024} ///</span>
+                        <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Función para escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Función para mostrar mensaje de no resultados
+        function showNoResults() {
+            document.getElementById('noResults').classList.remove('hidden');
+            document.getElementById('pagination').classList.add('hidden');
+        }
+        
+        // Función para mostrar errores
+        function showError(message) {
+            // Aquí podrías implementar un sistema de notificaciones
+            console.error(message);
+            alert(message);
+        }
+        
+        // Función para renderizar paginación
+        function renderPagination(pagination) {
+            const paginationDiv = document.getElementById('pagination');
+            const pageNumbersDiv = document.getElementById('pageNumbers');
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            
+            if (pagination.total_pages <= 1) {
+                paginationDiv.classList.add('hidden');
+                return;
+            }
+            
+            paginationDiv.classList.remove('hidden');
+            pageNumbersDiv.innerHTML = '';
+            
+            // Botón anterior
+            prevButton.disabled = !pagination.has_prev;
+            prevButton.className = `w-12 h-12 rounded ${pagination.has_prev ? 'bg-black hover:bg-gray-900 border border-gray-700 hover:border-red-500' : 'bg-gray-800 border border-gray-800 opacity-50 cursor-not-allowed'} flex items-center justify-center transition underground-text`;
+            
+            // Números de página
+            const startPage = Math.max(1, pagination.current_page - 2);
+            const endPage = Math.min(pagination.total_pages, pagination.current_page + 2);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `w-12 h-12 rounded ${i === pagination.current_page ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-black hover:bg-gray-900 border border-gray-700 hover:border-red-500 underground-text'} flex items-center justify-center underground-title`;
+                pageButton.textContent = i.toString().padStart(2, '0');
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    loadMovies(currentPage, currentSearch, currentFilter);
+                };
+                pageNumbersDiv.appendChild(pageButton);
+            }
+            
+            // Botón siguiente
+            nextButton.disabled = !pagination.has_next;
+            nextButton.className = `w-12 h-12 rounded ${pagination.has_next ? 'bg-black hover:bg-gray-900 border border-gray-700 hover:border-red-500' : 'bg-gray-800 border border-gray-800 opacity-50 cursor-not-allowed'} flex items-center justify-center transition underground-text`;
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginModal = document.getElementById('loginModal');
+            const loginButton = document.getElementById('loginButton');
+            const loginError = document.getElementById('loginError');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const body = document.body;
+            
+            // Credenciales correctas
+            const correctUsername = 'admin';
+            const correctPassword = '1234';
+            
+            // Función para permitir/denegar scroll
+            function enableScroll() {
+                body.classList.remove('no-scroll');
+                isLoggedIn = true;
+                loadMovies(); // Cargar películas al hacer login
+            }
+            
+            function disableScroll() {
+                body.classList.add('no-scroll');
+                isLoggedIn = false;
+            }
+            
+            // Al cargar la página, deshabilitar scroll
+            disableScroll();
+            
+            // Login
+            loginButton.addEventListener('click', function() {
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+                
+                if (username === correctUsername && password === correctPassword) {
+                    loginModal.style.display = 'none';
+                    enableScroll();
+                } else {
+                    loginError.classList.remove('hidden');
+                    
+                    const loginForm = document.querySelector('.login-form');
+                    loginForm.classList.add('animate-shake');
+                    setTimeout(() => {
+                        loginForm.classList.remove('animate-shake');
+                    }, 500);
+                }
+            });
+            
+            // Enter para login
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginButton.click();
+                }
+            });
+            
+            usernameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    passwordInput.focus();
+                }
+            });
+            
+            // Prevenir cerrar modal
+            loginModal.addEventListener('click', function(e) {
+                if (e.target === loginModal) {
+                    const loginForm = document.querySelector('.login-form');
+                    loginForm.classList.add('animate-pulse');
+                    setTimeout(() => {
+                        loginForm.classList.remove('animate-pulse');
+                    }, 300);
+                }
+            });
+            
+            // Prevenir scroll cuando no está logueado
+            window.addEventListener('wheel', function(e) {
+                if (body.classList.contains('no-scroll')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            window.addEventListener('keydown', function(e) {
+                if (body.classList.contains('no-scroll')) {
+                    const scrollKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '];
+                    if (scrollKeys.includes(e.key)) {
+                        e.preventDefault();
+                    }
+                }
+            });
+            
+            // Modal de subir película
+            const uploadMovieButton = document.getElementById('uploadMovieButton');
+            const uploadMovieModal = document.getElementById('uploadMovieModal');
+            const cancelUploadButton = document.getElementById('cancelUploadButton');
+            const uploadMovieForm = document.getElementById('uploadMovieForm');
+            
+            uploadMovieButton.addEventListener('click', function() {
+                uploadMovieModal.classList.remove('hidden');
+            });
+            
+            cancelUploadButton.addEventListener('click', function() {
+                uploadMovieModal.classList.add('hidden');
+                uploadMovieForm.reset();
+                clearPreviews();
+            });
+            
+            uploadMovieModal.addEventListener('click', function(e) {
+                if (e.target === uploadMovieModal) {
+                    uploadMovieModal.classList.add('hidden');
+                    uploadMovieForm.reset();
+                    clearPreviews();
+                }
+            });
+            
+            // Formulario de subida
+            uploadMovieForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitButton = document.getElementById('submitMovieButton');
+                const submitText = submitButton.querySelector('.submit-text');
+                const loading = submitButton.querySelector('.loading');
+                const uploadError = document.getElementById('uploadError');
+                const uploadSuccess = document.getElementById('uploadSuccess');
+                
+                // Mostrar loading
+                submitButton.disabled = true;
+                submitText.textContent = 'SUBIENDO...';
+                loading.classList.remove('hidden');
+                uploadError.classList.add('hidden');
+                uploadSuccess.classList.add('hidden');
+                
+                try {
+                    const formData = new FormData(uploadMovieForm);
+                    const response = await uploadFile(formData);
+                    
+                    if (response.success) {
+                        uploadSuccess.textContent = response.message || 'Película subida con éxito';
+                        uploadSuccess.classList.remove('hidden');
+                        
+                        // Limpiar formulario
+                        uploadMovieForm.reset();
+                        clearPreviews();
+                        
+                        // Cerrar modal después de 2 segundos
+                        setTimeout(() => {
+                            uploadMovieModal.classList.add('hidden');
+                            loadMovies(1, currentSearch, currentFilter); // Recargar películas
+                        }, 2000);
+                    } else {
+                        throw new Error(response.error || 'Error desconocido');
+                    }
+                } catch (error) {
+                    uploadError.textContent = error.message || 'Error al subir la película';
+                    uploadError.classList.remove('hidden');
+                } finally {
+                    // Restaurar botón
+                    submitButton.disabled = false;
+                    submitText.textContent = 'SUBIR';
+                    loading.classList.add('hidden');
+                }
+            });
+            
+            // Previews de archivos
+            const posterInput = uploadMovieForm.querySelector('input[name="poster"]');
+            const videoInput = uploadMovieForm.querySelector('input[name="video"]');
+            
+            posterInput.addEventListener('change', function(e) {
+                handleFilePreview(e.target, 'poster');
+            });
+            
+            videoInput.addEventListener('change', function(e) {
+                handleFilePreview(e.target, 'video');
+            });
+            
+            // Drag and drop
+            const uploadAreas = document.querySelectorAll('.upload-area');
+            uploadAreas.forEach(area => {
+                const input = area.querySelector('input[type="file"]');
+                
+                area.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    area.classList.add('dragover');
+                });
+                
+                area.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    area.classList.remove('dragover');
+                });
+                
+                area.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    area.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        input.files = files;
+                        const event = new Event('change', { bubbles: true });
+                        input.dispatchEvent(event);
+                    }
+                });
+            });
+            
+            // Búsqueda
+            const searchInput = document.getElementById('searchInput');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+            let searchTimeout;
+            
+            function handleSearch(value) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    currentSearch = value;
+                    currentPage = 1;
+                    loadMovies(currentPage, currentSearch, currentFilter);
+                }, 500);
+            }
+            
+            searchInput.addEventListener('input', function(e) {
+                handleSearch(e.target.value);
+            });
+            
+            mobileSearchInput.addEventListener('input', function(e) {
+                handleSearch(e.target.value);
+            });
+            
+            // Filtros
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover clase activa de todos los botones
+                    filterButtons.forEach(btn => btn.classList.remove('bg-red-600', 'border-red-600'));
+                    
+                    // Agregar clase activa al botón clickeado
+                    this.classList.add('bg-red-600', 'border-red-600');
+                    
+                    currentFilter = this.dataset.filter;
+                    currentPage = 1;
+                    loadMovies(currentPage, currentSearch, currentFilter);
+                });
+            });
+            
+            // Reproductor de video
+            const videoPlayerModal = document.getElementById('videoPlayerModal');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+            const videoDescription = document.getElementById('videoDescription');
+            const videoGenre = document.getElementById('videoGenre');
+            const videoYear = document.getElementById('videoYear');
+            const closeVideoButton = document.getElementById('closeVideoButton');
+            
+            // Delegación de eventos para pósters de películas
+            document.addEventListener('click', function(e) {
+                const moviePoster = e.target.closest('.movie-poster');
+                if (moviePoster) {
+                    const title = moviePoster.getAttribute('data-title');
+                    const description = moviePoster.getAttribute('data-description');
+                    const genre = moviePoster.getAttribute('data-genre');
+                    const year = moviePoster.getAttribute('data-year');
+                    const videoSrc = moviePoster.getAttribute('data-video');
+                    
+                    if (videoSrc) {
+                        videoTitle.textContent = title;
+                        videoTitle.setAttribute('data-text', title);
+                        videoDescription.textContent = description;
+                        videoGenre.textContent = genre;
+                        videoYear.textContent = `/// ${year} ///`;
+                        
+                        videoPlayer.querySelector('source').src = videoSrc;
+                        videoPlayer.load();
+                        
+                        videoPlayerModal.classList.remove('hidden');
+                        
+                        setTimeout(() => {
+                            videoPlayer.play().catch(e => {
+                                console.log('Error al reproducir automáticamente:', e);
+                            });
+                        }, 500);
+                    }
+                }
+            });
+            
+            // Cerrar reproductor
+            closeVideoButton.addEventListener('click', function() {
+                videoPlayer.pause();
+                videoPlayerModal.classList.add('hidden');
+            });
+            
+            videoPlayerModal.addEventListener('click', function(e) {
+                if (e.target === videoPlayerModal) {
+                    videoPlayer.pause();
+                    videoPlayerModal.classList.add('hidden');
+                }
+            });
+            
+            // Búsqueda móvil
+            const mobileSearchButton = document.querySelector('.mobile-search-button');
+            const mobileSearchBar = document.querySelector('.mobile-search-bar');
+            
+            if (mobileSearchButton && mobileSearchBar) {
+                mobileSearchButton.addEventListener('click', function() {
+                    mobileSearchBar.classList.toggle('hidden');
+                    
+                    if (!mobileSearchBar.classList.contains('hidden')) {
+                        mobileSearchBar.querySelector('input').focus();
+                    }
+                });
+                
+                document.addEventListener('click', function(e) {
+                    const isSearchButton = e.target.closest('.mobile-search-button');
+                    const isSearchBar = e.target.closest('.mobile-search-bar');
+                    
+                    if (!isSearchButton && !isSearchBar && !mobileSearchBar.classList.contains('hidden')) {
+                        mobileSearchBar.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Búsqueda desktop
+            const searchButton = document.querySelector('.search-button');
+            const searchBar = document.querySelector('.search-bar');
+            
+            if (searchButton && searchBar) {
+                searchButton.addEventListener('click', function() {
+                    searchBar.classList.toggle('expanded');
+                    searchBar.querySelector('input').focus();
+                });
+                
+                document.addEventListener('click', function(e) {
+                    const isSearchContainer = e.target.closest('.search-container');
+                    
+                    if (!isSearchContainer && searchBar.classList.contains('expanded')) {
+                        searchBar.classList.remove('expanded');
+                    }
+                });
+            }
+            
+            // Paginación
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            
+            prevButton.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadMovies(currentPage, currentSearch, currentFilter);
+                }
+            });
+            
+            nextButton.addEventListener('click', function() {
+                currentPage++;
+                loadMovies(currentPage, currentSearch, currentFilter);
+            });
+        });
+        
+        // Funciones auxiliares
+        function handleFilePreview(input, type) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const preview = input.parentElement.querySelector(`.${type}-preview`);
+            
+            if (type === 'poster') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = preview.querySelector('img');
+                    img.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else if (type === 'video') {
+                const filename = preview.querySelector('.filename');
+                filename.textContent = file.name;
+                preview.classList.remove('hidden');
+            }
+        }
+        
+        function clearPreviews() {
+            const previews = document.querySelectorAll('.poster-preview, .video-preview');
+            previews.forEach(preview => preview.classList.add('hidden'));
+        }
+    </script>
+</body>
+</html>
